@@ -396,7 +396,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 		$args = func_get_args();
 		return $this->whereOperator("AND", $args);
 	}
-
+	
 	function join($table,$on=false,$outer=false) {
 		$tbl=preg_replace('/^[^a-z]*((?:.* as )?`?([a-z][a-z0-9\_]*)).*$/i','$2',$table);
 		$this->join[$tbl]=" LEFT ".($outer?"OUTER ":"")."JOIN ".$table." ".($on===false?"":" ON ".$on);
@@ -599,7 +599,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 	* @param string
 	* @return int
 	*/
-	function count($column = "") {
+	function count($column = ""): int {
 		if (!$column) {
 			$this->execute();
 			return count($this->data);
@@ -611,7 +611,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 	* @param string
 	* @return int
 	*/
-	function min($column) {
+	function min($column):int {
 		return $this->aggregation("MIN($column)");
 	}
 	
@@ -619,7 +619,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 	* @param string
 	* @return int
 	*/
-	function max($column) {
+	function max($column):int {
 		return $this->aggregation("MAX($column)");
 	}
 	
@@ -627,7 +627,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 	* @param string
 	* @return int
 	*/
-	function sum($column) {
+	function sum($column):int {
 		return $this->aggregation("SUM($column)");
 	}
 	
@@ -741,27 +741,27 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 	
 	// Iterator implementation (not IteratorAggregate because $this->data can be changed during iteration)
 	
-	function rewind() {
+	function rewind():void {
 		$this->execute();
 		$this->keys = array_keys($this->data);
 		reset($this->keys);
 	}
 	
 	/** @return NotORM_Row */
-	function current() {
+	function current():NotORM_Row {
 		return $this->data[current($this->keys)];
 	}
 	
 	/** @return string row ID */
-	function key() {
+	function key(): string {
 		return current($this->keys);
 	}
 	
-	function next() {
+	function next(): void {
 		next($this->keys);
 	}
 	
-	function valid() {
+	function valid(): bool {
 		return current($this->keys) !== false;
 	}
 	
@@ -771,7 +771,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 	* @param string row ID or array for where conditions
 	* @return bool
 	*/
-	function offsetExists($key) {
+	function offsetExists($key): bool {
 		$row = $this->offsetGet($key);
 		return isset($row);
 	}
@@ -780,7 +780,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 	* @param string row ID or array for where conditions
 	* @return NotORM_Row or null if there is no such row
 	*/
-	function offsetGet($key) {
+	function offsetGet($key):NotORM_Row|null {
 		if ($this->single && !isset($this->data)) {
 			$clone = clone $this;
 			if (is_array($key)) {
@@ -814,7 +814,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 	* @param NotORM_Row
 	* @return null
 	*/
-	function offsetSet($key, $value) {
+	function offsetSet($key, $value): void {
 		$this->execute();
 		$this->data[$key] = $value;
 	}
@@ -823,14 +823,14 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 	* @param string row ID
 	* @return null
 	*/
-	function offsetUnset($key) {
+	function offsetUnset($key): void {
 		$this->execute();
 		unset($this->data[$key]);
 	}
 	
 	// JsonSerializable implementation
 	
-	function jsonSerialize() {
+	function jsonSerialize():JsonSerializable {
 		$this->execute();
 		if ($this->notORM->jsonAsArray) {
 			return array_values($this->data);
