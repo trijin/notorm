@@ -7,6 +7,7 @@ PHP 5.1+
 any database supported by PDO (tested with MySQL, SQLite, PostgreSQL, MS SQL, Oracle)
 
 Usage:
+
 <?php
 include "NotORM.php";
 $connection = new PDO("mysql:dbname=software");
@@ -20,3 +21,8 @@ foreach ($software->application()->order("title") as $application) { // get all 
     }
 }
 ?>
+
+In this version you can something like this:
+$db->books
+   ->select('books.id, books.title, books2.id as id2, books2.title as title2')
+   ->join('books as books2','books.author=books2.author AND books.id!=books2.id');
