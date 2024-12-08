@@ -711,6 +711,9 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 			$values = iterator_to_array($row);
 			$node = &$return;
 			foreach ($keys as $nodeKey) {
+				if(!isset($node[(string) $value[$nodeKey]])) {
+					$node[(string) $value[$nodeKey]] = array();
+				}
 				$node = &$node[(string) $values[$nodeKey]];
 			}
 			if ($value != "") {
