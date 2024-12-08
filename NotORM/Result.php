@@ -346,6 +346,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 				}
 			}
 		}
+		return false;
 	}
 	
 	/** Get last insert ID
