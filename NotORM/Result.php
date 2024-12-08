@@ -582,7 +582,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 	
 	/** Execute aggregation function
 	* @param string
-	* @return string
+	* @return mixed|void
 	*/
 	function aggregation($function) {
 		$join = $this->createJoins(implode(",", $this->conditions) . ",$function");
@@ -599,35 +599,35 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 	* @param string
 	* @return int
 	*/
-	function count($column = ""): int {
+	function count($column = ""):int {
 		if (!$column) {
 			$this->execute();
 			return count($this->data);
 		}
-		return $this->aggregation("COUNT($column)");
+		return (int)$this->aggregation("COUNT($column)");
 	}
 	
 	/** Return minimum value from a column
 	* @param string
-	* @return int
+	* @return mixed
 	*/
-	function min($column):int {
+	function min($column):mixed {
 		return $this->aggregation("MIN($column)");
 	}
 	
 	/** Return maximum value from a column
 	* @param string
-	* @return int
+	* @return mixed
 	*/
-	function max($column):int {
+	function max($column):mixed {
 		return $this->aggregation("MAX($column)");
 	}
 	
 	/** Return sum of values in a column
 	* @param string
-	* @return int
+	* @return numeric
 	*/
-	function sum($column):int {
+	function sum($column):int|float|string {
 		return $this->aggregation("SUM($column)");
 	}
 	
@@ -818,6 +818,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 				return $this->data[$key];
 			}
 		}
+		return null;
 	}
 	
 	/** Mimic row
@@ -841,7 +842,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 	
 	// JsonSerializable implementation
 	
-	function jsonSerialize():JsonSerializable {
+	function jsonSerialize():JsonSerializable|array {
 		$this->execute();
 		if ($this->notORM->jsonAsArray) {
 			return array_values($this->data);
