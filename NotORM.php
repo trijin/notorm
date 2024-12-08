@@ -73,7 +73,7 @@ class NotORM extends NotORM_Abstract {
 	}
 	
 	/** Set write-only properties
-	* @return null
+	* @return null|bool
 	*/
 	function __set($name, $value) {
 		if ($name == "debug" || $name == "debugTimer" || $name == "freeze" || $name == "rowClass" || $name == "jsonAsArray") {
