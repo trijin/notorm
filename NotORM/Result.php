@@ -638,7 +638,7 @@ class NotORM_Result extends NotORM_Abstract implements Iterator, ArrayAccess, Co
 	}
 	
 	/** Execute the built query
-	* @return null
+	* @return void
 	*/
 	protected function execute() {
 		if (!isset($this->rows)) {
